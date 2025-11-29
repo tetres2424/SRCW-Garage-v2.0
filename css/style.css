@@ -4,9 +4,18 @@ h1, h3, h4 { text-align: center; margin: 0.5em 0; }
 h1 { color: var(--primary); cursor: pointer; }
 .container { display: flex; flex-direction: column; gap: 20px; }
 .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+/* ナビゲーション */
+.nav-menu { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.nav-btn { background-color: #fff; border: 1px solid #ddd; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; color: #555; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.nav-btn:hover { background-color: #f0f8ff; color: var(--primary); }
+.nav-btn.active { background-color: var(--primary); color: white; border-color: var(--primary); }
+
+/* 注意書き */
 .alert-box { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; line-height: 1.5; }
 .alert-box strong { color: #d32f2f; }
 
+/* ビジュアルエリア */
 .row-container { margin-bottom: 15px; }
 .row-label { display: flex; justify-content: space-between; font-size: 0.9rem; color: #666; margin-bottom: 5px; }
 .visual-row { display: flex; gap: 4px; height: 60px; background: #eee; padding: 4px; border-radius: 4px; }
@@ -14,6 +23,7 @@ h1 { color: var(--primary); cursor: pointer; }
 .slot-block:hover { transform: scale(1.02); z-index: 1; }
 .block-empty { background-color: var(--slot-empty); border: 1px dashed #bbb; color: #aaa; text-shadow: none; cursor: default; }
 
+/* タイプ色 */
 .type-ring-get { background-color: #fbc02d; color: #333; text-shadow: none; }
 .type-ring-ability { background-color: #ff9800; }
 .type-tech-boost { background-color: #4caf50; }
@@ -28,6 +38,7 @@ h1 { color: var(--primary); cursor: pointer; }
 .type-advanced { background-color: #212121; }
 .type-custom { background: linear-gradient(90deg, #ff0000, #ff7f00, #cccc00, #00b300, #0000ff, #4b0082, #9400d3); }
 
+/* 操作パネル */
 .controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; }
 select, input[type="text"] { padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
 select:disabled { background-color: #eee !important; color: #aaa; opacity: 1; }
@@ -42,6 +53,7 @@ button:hover { opacity: 0.8; }
 .btn-share { background-color: #fbc02d; color: #333; width: 100%; font-size: 1.1em; padding: 12px; margin-top:10px; }
 .btn-delete-memo { background-color: #ff9800; padding: 4px 8px; font-size: 0.8rem; }
 .btn-delete-custom { background-color: #d32f2f; padding: 4px 8px; font-size: 0.8rem; margin-left: 10px; }
+
 .custom-area { background: #e8f5e9; padding: 15px; border-radius: 6px; border: 1px solid #c8e6c9; margin-top: 10px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .custom-list { margin-top: 10px; padding: 5px; background: #fff; border-radius: 4px; border: 1px solid #ddd; max-height: 150px; overflow-y: auto; }
 .custom-item { display: flex; justify-content: space-between; align-items: center; padding: 5px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
@@ -54,3 +66,129 @@ button:hover { opacity: 0.8; }
 .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 0.8rem; color: #777; }
 .footer a { color: #555; text-decoration: none; }
 .footer a:hover { text-decoration: underline; }
+
+/* ランキング用 */
+.rank-bar { height: 18px; background-color: #e3f2fd; border-radius: 3px; overflow: hidden; margin-top: 4px; width: 100%; position: relative; }
+.rank-fill { height: 100%; background-color: #2196f3; transition: width 0.5s; }
+.player-row { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
+.player-row:hover { background-color: #f0f8ff; }
+.rank-num { width: 40px; font-weight: bold; color: #444; font-size: 1.1rem; }
+.rank-top { color: #ff9800; }
+.p-name { flex: 1; font-weight: bold; color: var(--primary); }
+.p-char { color: #666; font-size: 0.9rem; }
+
+/* モーダル */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+.modal-content { background: white; width: 95%; max-width: 600px; max-height: 90vh; border-radius: 12px; padding: 20px; overflow-y: auto; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+.modal-close { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #999; font-weight: bold; }
+.modal-close:hover { color: #333; }
+
+/* 3x2 グリッド */
+.m-info { display: flex; flex-wrap: wrap; gap: 15px; margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 6px; }
+.m-stats { 
+    display: flex; 
+    justify-content: flex-start; /* 左寄せにする */
+    gap: 15px; /* 項目同士の間隔を適度に空ける */
+    margin: 10px 0; 
+    font-family: monospace; 
+    font-size: 1rem; 
+    flex-wrap: wrap; /* スマホで狭いときは折り返す */
+}
+.popup-row-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+    background: #eee;
+    padding: 10px;
+    border-radius: 6px;
+}
+.m-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 15px; background: #eee; padding: 6px; border-radius: 6px; }
+.m-grid-item { background: #fff; padding: 6px 2px; border-radius: 4px; border: 1px solid #ddd; text-align: center; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50px; word-break: break-all; }
+.m-grid-cost { font-size: 0.65rem; color: #999; margin-top: 2px; font-weight: bold; }
+.m-label { font-size:0.8rem; color:#666; margin-bottom:4px; display:block; }
+/* --- シナジーリストのデザイン（進化版） --- */
+.synergy-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.synergy-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-left: 5px solid #009688; /* シナジーカラー */
+    border-radius: 6px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.synergy-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background-color: #e0f2f1; /* 薄い緑 */
+}
+
+.synergy-title {
+    font-weight: bold;
+    color: #00695c;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.synergy-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+/* 分析モーダル内のグラフ用 */
+.stat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+}
+.stat-label { flex: 1; font-weight: bold; color: #555; }
+.stat-bar-bg { flex: 2; height: 12px; background: #eee; border-radius: 6px; overflow: hidden; margin: 0 10px; }
+.stat-bar-fill { height: 100%; background: #ff9800; }
+.stat-val { width: 40px; text-align: right; color: #888; }
+
+/* --- 追加修正: 閉じるボタンとランキング装飾 --- */
+
+/* ポップアップ内の閉じるボタン (濃い色に変更) */
+.btn-modal-close {
+    padding: 10px 30px;
+    background-color: #546e7a; /* 濃いグレー青 */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background 0.2s;
+}
+.btn-modal-close:hover {
+    background-color: #37474f; /* ホバー時はさらに濃く */
+}
+
+/* ランキング順位 (金・銀・銅) */
+.rank-num.rank-1 { 
+    color: #d4af37; /* ゴールド */
+    font-size: 1.4rem; 
+    text-shadow: 1px 1px 0px #b8860b;
+}
+.rank-num.rank-2 { 
+    color: #a9a9a9; /* シルバー */
+    font-size: 1.3rem; 
+    text-shadow: 1px 1px 0px #696969;
+}
+.rank-num.rank-3 { 
+    color: #c47022; /* ブロンズ */
+    font-size: 1.2rem; 
+    text-shadow: 1px 1px 0px #8b4513;
+}
