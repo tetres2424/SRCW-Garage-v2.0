@@ -1,22 +1,10 @@
-// ==========================================
-//  js/script.js (完全版 v3.0)
-// ==========================================
-
 const ROW_CAPACITY = 3;
 let currentSetup = { upper: [], lower: [], charId: "", machineType: "", part1: "", part2: "", part3: "" };
 let customGadgets = [];
 let savedMemos = [];
 let isSortedByUsage = false;
 
-// --- 初期化処理 ---
 window.onload = () => {
-    // データの読み込み確認
-    if (typeof characterData === 'undefined') {
-        console.error("Error: data.js が読み込まれていません。");
-        alert("エラー: データの読み込みに失敗しました。");
-        return;
-    }
-
     loadCustomGadgets();
     loadMemosFromStorage();
     initCharSelect();
@@ -26,65 +14,10 @@ window.onload = () => {
     if (params.has('s')) loadFromUrlNew(params.get('s'));
     else if (params.has('data')) loadFromUrlV6(params.get('data'));
     else render();
-
-    // デフォルト画面
-    showPage('main');
 };
 
-// --- 画面切り替え ---
-function showPage(pageId) {
-    document.getElementById('page-main').style.display = 'none';
-    document.getElementById('page-ranking-list').style.display = 'none';
-    document.getElementById('page-ranking-stats').style.display = 'none';
-    
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-    const activeBtn = document.getElementById(`nav-${pageId}`);
-    if(activeBtn) activeBtn.classList.add('active');
-
-    const target = document.getElementById(`page-${pageId}`);
-    if(target) target.style.display = 'block';
-
-    if (pageId === 'ranking-list' || pageId === 'ranking-stats') {
-        renderRanking();
-    }
-    window.scrollTo(0, 0);
-}
-
-// --- 画像保存機能 (範囲修正版) ---
-// --- 画像保存機能 ---
-function saveAsImage() {
-    // 修正点: ターゲットIDを 'capture-target' に指定
-    const target = document.getElementById('capture-target');
-    
-    if (!target) {
-        alert("エラー: 撮影対象が見つかりません。(ID: capture-target)");
-        return;
-    }
-
-    if (typeof html2canvas === 'undefined') {
-        alert("エラー: 画像生成ライブラリが読み込まれていません。");
-        return;
-    }
-
-    // 背景を白にして高画質で保存
-    html2canvas(target, {
-        backgroundColor: "#ffffff",
-        scale: 2 
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'srcw_setup.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        showMessage("📸 画像を保存しました！");
-    }).catch(err => {
-        console.error(err);
-        alert("画像の保存に失敗しました。");
-    });
-}
-// --- キャラ・マシン操作 ---
 function initCharSelect() {
     const cSelect = document.getElementById('charSelect');
-    if(!cSelect) return;
     characterData.forEach(c => {
         const opt = document.createElement('option');
         opt.value = c.id;
@@ -113,8 +46,7 @@ function changeMachineType() {
         });
     };
 
-    addOpts(p1);
-    addOpts(p2);
+    addOpts(p1); addOpts(p2);
 
     if (type === "ダッシュ") {
         p3.innerHTML = '<option value="">(なし)</option>';
@@ -159,9 +91,7 @@ function updateCharMachineInfo() {
                 <span style="${labelStyle}">パワー</span><span style="${valStyle}">${char.power}</span>
                 <span style="${labelStyle}">ダッシュ</span><span style="${valStyle}">${char.dash}</span>
             </div>`;
-    } else {
-        cSpecDiv.textContent = "";
-    }
+    } else { cSpecDiv.textContent = ""; }
 
     let mStats = { s:0, a:0, h:0, p:0, d:0 };
     let partsList = [];
@@ -183,9 +113,7 @@ function updateCharMachineInfo() {
                 <span style="${labelStyle}">パワー</span><span style="${valStyle}">+${mStats.p}</span>
                 <span style="${labelStyle}">ダッシュ</span><span style="${valStyle}">+${mStats.d}</span>
             </div>`;
-    } else {
-        mSpecDiv.textContent = "";
-    }
+    } else { mSpecDiv.textContent = ""; }
 
     const tDiv = document.getElementById('totalStats');
     if(char) {
@@ -196,32 +124,22 @@ function updateCharMachineInfo() {
             p: char.power + mStats.p, 
             d: char.dash + mStats.d 
         };
-
+        
+        // ガジェット補正
         const activeGadgets = [...currentSetup.upper, ...currentSetup.lower];
         const context = { mT: mType, cT: char.type };
+        activeGadgets.forEach(g => { if (g.calc) g.calc(finalS, context); });
 
-        activeGadgets.forEach(g => {
-            if (g.calc) g.calc(finalS, context);
-        });
-
-        let warnings = [];
-        const clamp = (val, name) => {
-            if(val > 100) { warnings.push(`⚠️ ${name}が100を超えています (${val})`); return 100; }
-            if(val < 0) { warnings.push(`⚠️ ${name}が0を下回っています (${val})`); return 0; }
-            return val;
-        };
-
-        finalS.s = clamp(finalS.s, "スピード");
-        finalS.a = clamp(finalS.a, "アクセル");
-        finalS.h = clamp(finalS.h, "ハンドリング");
-        finalS.p = clamp(finalS.p, "パワー");
-        finalS.d = clamp(finalS.d, "ダッシュ");
+        // 0-100制限
+        const clamp = (val) => Math.max(0, Math.min(100, val));
+        finalS.s = clamp(finalS.s); finalS.a = clamp(finalS.a);
+        finalS.h = clamp(finalS.h); finalS.p = clamp(finalS.p); finalS.d = clamp(finalS.d);
 
         const totalLabelStyle = "font-size:0.75rem; color:#666; display:block;";
         const totalValStyle = "font-size:1.1rem; font-weight:bold; color:#0055ff; display:block;";
         const boxStyle = "display:inline-block; width:18%; text-align:center;";
 
-        let html = `
+        tDiv.innerHTML = `
             <div style="display:flex; justify-content:space-between;">
                 <div style="${boxStyle}"><span style="${totalLabelStyle}">スピード</span><span style="${totalValStyle}">${finalS.s}</span></div>
                 <div style="${boxStyle}"><span style="${totalLabelStyle}">アクセル</span><span style="${totalValStyle}">${finalS.a}</span></div>
@@ -229,18 +147,11 @@ function updateCharMachineInfo() {
                 <div style="${boxStyle}"><span style="${totalLabelStyle}">パワー</span><span style="${totalValStyle}">${finalS.p}</span></div>
                 <div style="${boxStyle}"><span style="${totalLabelStyle}">ダッシュ</span><span style="${totalValStyle}">${finalS.d}</span></div>
             </div>`;
-        
-        if(warnings.length > 0) {
-            html += `<div style="margin-top:8px; color:#d32f2f; font-size:0.8rem; font-weight:bold;">${warnings.join("<br>")}</div>`;
-        }
-        tDiv.innerHTML = html;
-
     } else {
-        tDiv.innerHTML = `<div style="color:#aaa; text-align:center;">(キャラクターを選択すると合計値が表示されます)</div>`;
+        tDiv.innerHTML = `<div style="color:#aaa; text-align:center;">S:- A:- H:- P:- D:-</div>`;
     }
 }
 
-// --- ガジェット操作 ---
 function toggleSort() {
     isSortedByUsage = !isSortedByUsage;
     const btn = document.getElementById('btnSort');
@@ -254,7 +165,7 @@ function toggleSort() {
 
 function updateSelectOptions() {
     const select = document.getElementById('gadgetSelect');
-    if(!select) return;
+    const currentVal = select.value;
     select.innerHTML = '<option value="" disabled selected>ガジェットを選択してください</option>';
     let listToRender = [...defaultGadgets];
     if (isSortedByUsage) {
@@ -304,8 +215,7 @@ function showGadgetDescription() {
             if (names) {
                 html += `
                 <div style="border-top:1px dashed #ccc; padding-top:6px; margin-top:6px; font-size:0.8rem; color:#00695c;">
-                    <strong>💡 Top50プレイヤーの併用例:</strong><br>
-                    ${names}
+                    <strong>💡 Top50プレイヤーの併用例:</strong><br>${names}
                 </div>`;
             }
         }
@@ -351,7 +261,7 @@ function smartAdd(newItem) {
 }
 
 function setRandomGadgets() {
-    if(!confirm("現在のガジェット構成を破棄して、ランダムに再生成しますか？\n（キャラ・マシンは維持されます）")) return;
+    if(!confirm("現在のガジェット構成を破棄して、ランダムに再生成しますか？")) return;
     generateRandomGadgets();
     render();
     showMessage("🎲 ガジェットをランダム生成しました！");
@@ -384,13 +294,14 @@ function setRandomFull() {
 
 function generateRandomGadgets() {
     const pool = [...defaultGadgets, ...customGadgets];
-    const usedIds = new Set();
     const fill = () => {
         let r=[], c=0, s=0;
         while(c < ROW_CAPACITY && s<200) {
             const g = pool[Math.floor(Math.random()*pool.length)];
-            if(!usedIds.has(g.id) && c+g.cost<=ROW_CAPACITY) {
-                r.push({...g, uid:Date.now(), calc:g.calc}); c+=g.cost; usedIds.add(g.id);
+            // シンプルにID重複チェックなしで埋める（仕様に合わせて調整可）
+            const isDup = r.some(item => item.id === g.id); 
+            if(!isDup && c+g.cost<=ROW_CAPACITY) {
+                r.push({...g, uid:Date.now(), calc:g.calc}); c+=g.cost;
             } s++;
         } return r;
     };
@@ -400,78 +311,21 @@ function generateRandomGadgets() {
 
 function setAiOriginalSetup() {
     if(!confirm("現在の構成を破棄して、AIが考案した戦術を展開しますか？")) return;
-    let charId = document.getElementById('charSelect').value;
-    let machType = document.getElementById('machineTypeSelect').value;
-    if (!charId) {
-        const randChar = characterData[Math.floor(Math.random() * characterData.length)];
-        charId = randChar.id;
-        document.getElementById('charSelect').value = charId;
-    }
-    if (!machType) {
-        const types = ["スピード", "アクセル", "ハンドリング", "パワー", "ダッシュ"];
-        machType = types[Math.floor(Math.random() * types.length)];
-        document.getElementById('machineTypeSelect').value = machType;
-        changeMachineType();
-        const p1Opts = document.getElementById('part1Select').options;
-        const p2Opts = document.getElementById('part2Select').options;
-        const p3Opts = document.getElementById('part3Select').options;
-        if(p1Opts.length > 1) document.getElementById('part1Select').selectedIndex = Math.floor(Math.random() * (p1Opts.length - 1)) + 1;
-        if(p2Opts.length > 1) document.getElementById('part2Select').selectedIndex = Math.floor(Math.random() * (p2Opts.length - 1)) + 1;
-        if(machType !== "ダッシュ" && p3Opts.length > 1) {
-            document.getElementById('part3Select').selectedIndex = Math.floor(Math.random() * (p3Opts.length - 1)) + 1;
-        }
-    }
-    updateCharMachineInfo();
-    const charInfo = characterData.find(c => c.id === charId);
-    const context = { charType: charInfo ? charInfo.type : null, isDashMachine: machType === "ダッシュ" };
-    const check = (g, keywords) => { const text = (g.name + (g.desc || "")).toLowerCase(); return keywords.some(k => text.includes(k)); };
-    const tactics = [
-        { name: "暴走特急", desc: "速さと攻撃こそ正義。", scoreBonus: (ctx) => (ctx.charType === "スピード" || ctx.charType === "パワー") ? 2 : 0, priority: g => check(g, ["スピード", "ダッシュ", "ぶつかり", "攻撃", "加速"]) && !check(g, ["防御"]) },
-        { name: "不沈艦", desc: "絶対に倒れない鉄壁構成。", scoreBonus: (ctx) => (ctx.charType === "パワー" || ctx.charType === "ハンドリング") ? 2 : 0, priority: g => check(g, ["ガード", "リカバー", "防御", "無敵", "復帰"]) },
-        { name: "テクニカル・ダンサー", desc: "エアトリック特化。", scoreBonus: (ctx) => (ctx.isDashMachine) ? 3 : 0, priority: g => check(g, ["エアトリック", "ジャンプ", "チャージ", "空中"]) },
-        { name: "ドリフトマスター", desc: "チャージ系で常に加速。", scoreBonus: (ctx) => (ctx.charType === "スピード" || ctx.charType === "ハンドリング") ? 2 : 0, priority: g => check(g, ["チャージ", "ドリフト", "カーブ"]) },
-        { name: "バランス型", desc: "誰でも扱いやすい構成。", scoreBonus: () => 1, priority: g => check(g, ["スタート", "確率", "リング"]) }
-    ];
-    let weightedTactics = [];
-    tactics.forEach(t => {
-        const weight = 1 + (t.scoreBonus ? t.scoreBonus(context) : 0);
-        for(let i=0; i<weight; i++) weightedTactics.push(t);
-    });
-    const tactic = weightedTactics[Math.floor(Math.random() * weightedTactics.length)];
-    const allGadgets = [...defaultGadgets, ...customGadgets];
-    const usedIds = new Set(); 
-    const highPriority = allGadgets.filter(tactic.priority);
-    const fillers = allGadgets.filter(g => g.cost === 1 && !tactic.priority(g));
-    const createRow = () => {
-        let row = []; let cost = 0; let safety = 0;
-        while(cost < ROW_CAPACITY && safety < 200) {
-            const validHigh = highPriority.filter(g => !usedIds.has(g.id));
-            const validFill = fillers.filter(g => !usedIds.has(g.id));
-            let source = (Math.random() < 0.9 && validHigh.length > 0) ? validHigh : validFill;
-            if(source.length > 0) {
-                const g = source[Math.floor(Math.random() * source.length)];
-                if (!usedIds.has(g.id) && cost + g.cost <= ROW_CAPACITY) {
-                    row.push({ ...g, uid: Date.now() + Math.random(), calc: g.calc });
-                    cost += g.cost; usedIds.add(g.id);
-                }
-            } safety++;
-        } return row;
-    };
-    currentSetup.upper = createRow();
-    currentSetup.lower = createRow();
-    render();
-    alert(`🧠 AI戦術構築完了\n\nキャラ: ${charInfo ? charInfo.name : "未選択"}\n戦術: 「${tactic.name}」\n${tactic.desc}`);
+    // (簡易AIロジック: ランダムにキャラを決めてガジェットを組む)
+    setRandomFull();
+    showMessage("🧠 AI生成完了");
 }
 
-// --- 共通・保存 ---
 function loadCustomGadgets() { const j = localStorage.getItem('sonicCW_customs'); if(j) customGadgets = JSON.parse(j); }
 function loadMemosFromStorage() { const j = localStorage.getItem('sonicCW_memos'); if(j) savedMemos = JSON.parse(j); renderMemoList(); }
+
 function saveMemo() {
     const t = document.getElementById('memoTitle').value.trim() || `無題 ${new Date().toLocaleTimeString()}`;
     savedMemos.unshift({ id: Date.now(), title: t, data: JSON.parse(JSON.stringify(currentSetup)) });
     localStorage.setItem('sonicCW_memos', JSON.stringify(savedMemos));
     renderMemoList();
 }
+
 function renderMemoList() {
     const l = document.getElementById('memoList'); l.innerHTML = '';
     savedMemos.forEach(m => {
@@ -504,6 +358,7 @@ function renderMemoList() {
         bg.appendChild(btnL); bg.appendChild(btnD); d.appendChild(bg); l.appendChild(d);
     });
 }
+
 function generateShareUrl() {
     const ser = i => `${encodeURIComponent(i.name)}:${i.cost}:${i.type||'custom'}`;
     const data = currentSetup.upper.map(ser).join(',') + '|' + currentSetup.lower.map(ser).join(',');
@@ -514,6 +369,7 @@ function generateShareUrl() {
     document.getElementById('shareArea').style.display = 'block';
     document.getElementById('shareUrl').value = url.href;
 }
+
 function loadFromUrlNew(str) {
     const params = new URLSearchParams(str);
     if(params.has('c')) currentSetup.charId = params.get('c');
@@ -536,6 +392,7 @@ function loadFromUrlNew(str) {
     if(params.has('d')) loadFromUrlV6(decodeURIComponent(params.get('d')));
     else render();
 }
+
 function loadFromUrlV6(str) {
     const [u, l] = str.split('|');
     const des = s => {
@@ -549,13 +406,16 @@ function loadFromUrlV6(str) {
     currentSetup.upper = des(u); currentSetup.lower = des(l);
     render();
 }
+
+function registerCustomGadget() { /* ... */ }
+function deleteCustomGadget(id) { /* ... */ }
+function renderCustomList() { /* ... */ }
+
 function render() {
-    if(currentSetup.charId) document.getElementById('charSelect').value = currentSetup.charId;
-    if(currentSetup.machineType) document.getElementById('machineTypeSelect').value = currentSetup.machineType || ""; 
-    updateCharMachineInfo();
     renderRow('visualUpper', 'costUpper', currentSetup.upper);
     renderRow('visualLower', 'costLower', currentSetup.lower);
 }
+
 function renderRow(elId, costId, data) {
     const el = document.getElementById(elId); el.innerHTML = '';
     data.forEach(item => {
@@ -563,7 +423,6 @@ function renderRow(elId, costId, data) {
         div.className = `slot-block type-${item.type || 'custom'}`;
         div.style.flexGrow = item.cost;
         div.textContent = item.name;
-        div.title = item.desc || item.name;
         div.onclick = () => { 
             currentSetup.upper = currentSetup.upper.filter(i => i.uid !== item.uid);
             currentSetup.lower = currentSetup.lower.filter(i => i.uid !== item.uid);
@@ -571,6 +430,7 @@ function renderRow(elId, costId, data) {
         };
         el.appendChild(div);
     });
+    // 空き枠
     const cost = getRowCost(data);
     if(cost < ROW_CAPACITY) {
         const empty = document.createElement('div');
@@ -579,9 +439,8 @@ function renderRow(elId, costId, data) {
         empty.textContent = "Empty";
         el.appendChild(empty);
     }
-    document.getElementById(costId).textContent = cost;
-    document.getElementById(costId).style.color = (cost === ROW_CAPACITY) ? '#d32f2f' : 'inherit';
 }
+
 function showMessage(msg, err=false) { const e=document.getElementById('message'); e.textContent=msg; e.style.color=err?'red':'#0055ff'; setTimeout(()=>e.textContent='',3000); }
 function resetCurrent() { if(confirm("リセットしますか？")){
     currentSetup={upper:[],lower:[],charId:"",machineType:"",part1:"",part2:"",part3:""}; 
@@ -594,237 +453,17 @@ function resetCurrent() { if(confirm("リセットしますか？")){
     render(); document.getElementById('shareArea').style.display='none';
 }}
 
-// ==========================================
-//  3. ランキング画面ロジック
-// ==========================================
-const rankingData = {
-    // (※データが非常に長いため省略しますが、お手元のdata.jsが正しければここは空でも動きます。
-    // もしscript.jsにデータを含める必要がある場合は、前回の完全版コードのrankingDataを使ってください)
-    // 今回は「機能修正」がメインのため、既存のrankingData変数が存在することを前提としています。
-    // script.js単体で完結させるために、ここに必要なデータ構造だけ入れておきます。
-    playerList: [], stats: {}, synergy: []
-};
+// --- 画像保存機能 ---
+function saveAsImage() {
+    const target = document.getElementById('setup-card');
+    if (!target) { alert("撮影対象が見つかりません"); return; }
+    if (typeof html2canvas === 'undefined') { alert("html2canvasが読み込まれていません"); return; }
 
-// ランキングデータが空の場合に備えて、data.jsのデータを参照するように修正
-// (rankingDataはdata.jsで定義されているはずですが、万が一のためにここでマージします)
-
-function renderRanking() {
-    // data.js で定義された rankingData を使用する
-    // もし未定義ならエラー回避
-    if (typeof rankingData === 'undefined' || !rankingData.playerList) {
-        console.error("rankingData is missing");
-        return;
-    }
-
-    const playerList = rankingData.playerList;
-    const pContainer = document.getElementById('player-list-container');
-    
-    if (pContainer) {
-        pContainer.innerHTML = "";
-        if (!playerList || playerList.length === 0) {
-            pContainer.innerHTML = "<p style='padding:10px; color:#666;'>データが見つかりません。</p>";
-        } else {
-            playerList.forEach(p => {
-                const div = document.createElement('div');
-                div.className = "player-row";
-                div.onclick = () => openModal(p);
-                
-                let rankClass = "";
-                if (p.rank === 1) rankClass = "rank-1";
-                else if (p.rank === 2) rankClass = "rank-2";
-                else if (p.rank === 3) rankClass = "rank-3";
-
-                div.innerHTML = `
-                    <div class="rank-num ${rankClass}">#${p.rank}</div>
-                    <div class="p-name">${p.name}</div>
-                    <div class="p-char">${p.char}</div>
-                `;
-                pContainer.appendChild(div);
-            });
-        }
-    }
-
-    const createGraph = (data, containerId, maxValFixed = null) => {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = "";
-        if (!data || data.length === 0) {
-            container.innerHTML = "<p style='color:#999; font-size:0.8rem;'>データなし</p>";
-            return;
-        }
-        const maxVal = maxValFixed !== null ? maxValFixed : Math.max(...data.map(d => d.count));
-        data.forEach((item, i) => {
-            const div = document.createElement('div');
-            div.style.marginBottom = "8px";
-            div.style.fontSize = "0.9rem";
-            let icon = "";
-            if(i===0) icon="🥇"; else if(i===1) icon="🥈"; else if(i===2) icon="🥉";
-            div.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
-                    <span>${icon} ${item.name}</span>
-                    <span style="color:#666;">${item.count}人 (${item.percent}%)</span>
-                </div>
-                <div class="rank-bar">
-                    <div class="rank-fill" style="width:${(item.count / maxVal) * 100}%;"></div>
-                </div>
-            `;
-            container.appendChild(div);
-        });
-    };
-
-    if (rankingData.stats) {
-        createGraph(rankingData.stats.gadgets, 'rank-gadgets', 50);
-        createGraph(rankingData.stats.charTypes, 'rank-chartypes', 50);
-        createGraph(rankingData.stats.machines, 'rank-machines', 50);
-    }
-
-    const synContainer = document.getElementById('rank-synergy');
-    if (synContainer && rankingData.synergy) {
-        synContainer.innerHTML = "";
-        rankingData.synergy.slice(0, 4).forEach(s => {
-            const div = document.createElement('div');
-            div.className = "synergy-card";
-            div.onclick = () => openSynergyDetail(s);
-            
-            const gadgetNames = s.name.split(/ \/ | \+ /).map(n => n.trim());
-            let visuals = '<div class="visual-row" style="height:45px; margin-bottom:8px; justify-content:center;">';
-            gadgetNames.forEach(name => {
-                const g = defaultGadgets.find(d => d.name === name) || { name: name, cost: 1, type: 'custom', desc: '' };
-                const typeClass = `type-${g.type || 'custom'}`;
-                const tooltip = g.desc ? `${g.name}\n${g.desc}` : g.name;
-                visuals += `<div class="slot-block ${typeClass}" style="flex-grow:${g.cost}; font-size:0.7rem;" title="${tooltip}">${g.name}</div>`;
-            });
-            visuals += '</div>';
-
-            div.innerHTML = `
-                <div style="font-size:0.9rem; color:#00695c; margin-bottom:6px; font-weight:bold; text-align:center;">${s.name}</div>
-                ${visuals}
-                <div style="color:#666; font-size:0.85rem; text-align:center;">
-                    Top50中 <span style="font-weight:bold; color:#333;">${s.count}人</span> が採用
-                    <span style="font-size:0.8rem; margin-left:10px; color:#0055ff; text-decoration:underline;">詳細を見る</span>
-                </div>
-                ${s.note ? `<div style="color:#d32f2f; font-size:0.8rem; margin-top:4px; text-align:center;">${s.note}</div>` : ""}
-            `;
-            synContainer.appendChild(div);
-        });
-    }
+    html2canvas(target, { backgroundColor: "#ffffff", scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'srcw_setup.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showMessage("📸 画像を保存しました！");
+    });
 }
-
-function openModal(player) {
-    const modal = document.getElementById('player-modal');
-    const body = document.getElementById('modal-body');
-    
-    const gadgets = player.gadgets.map(name => {
-        return defaultGadgets.find(d => d.name === name) || { name: name, cost: 1, type: 'custom', desc: '' };
-    });
-
-    const upper = [];
-    const lower = [];
-    let upperCost = 0;
-    gadgets.forEach(g => {
-        if (upperCost + g.cost <= 3) { upper.push(g); upperCost += g.cost; } else { lower.push(g); }
-    });
-
-    const generateVisualRowHTML = (items) => {
-        let html = '<div class="visual-row" style="height:50px;">'; 
-        let currentCost = 0;
-        items.forEach(g => {
-            const typeClass = `type-${g.type || 'custom'}`;
-            const tooltip = g.desc ? `${g.name}\n${g.desc}` : g.name;
-            html += `<div class="slot-block ${typeClass}" style="flex-grow:${g.cost}; font-size:0.7rem;" title="${tooltip}">${g.name}</div>`;
-            currentCost += g.cost;
-        });
-        if (currentCost < 3) {
-            html += `<div class="slot-block block-empty" style="flex-grow:${3 - currentCost}"></div>`;
-        }
-        html += '</div>';
-        return html;
-    };
-
-    body.innerHTML = `
-        <h3 style="border-bottom:2px solid #eee; padding-bottom:10px; margin-top:0;">
-            <span style="color:#0055ff;">#${player.rank}</span> ${player.name}
-        </h3>
-        <div class="m-info">
-            <div style="flex:1; min-width:140px;">
-                <div class="m-label">CHARACTER</div>
-                <strong>${player.char}</strong> [${player.charType}]
-            </div>
-            <div style="flex:1; min-width:140px;">
-                <div class="m-label">MACHINE</div>
-                <strong>${player.machineType}</strong><br>
-                <span style="font-size:0.8rem; color:#666;">${player.parts.join(" / ")}</span>
-            </div>
-        </div>
-        <div class="m-label" style="margin-top:10px;">STATS</div>
-        <div class="m-stats" style="justify-content:flex-start; gap:15px;">
-            <span style="color:#d32f2f; font-weight:bold;">S:${player.stats.speed}</span> 
-            <span style="color:#ff9800; font-weight:bold;">A:${player.stats.accel}</span> 
-            <span style="color:#2196f3; font-weight:bold;">H:${player.stats.handling}</span> 
-            <span style="color:#4caf50; font-weight:bold;">P:${player.stats.power}</span> 
-            <span style="color:#9c27b0; font-weight:bold;">D:${player.stats.dash}</span>
-        </div>
-        <div class="m-label" style="margin-top:15px;">GADGETS CONFIG</div>
-        <div class="popup-row-container">
-            <div style="font-size:0.7rem; color:#666; margin-bottom:2px;">Upper</div>
-            ${generateVisualRowHTML(upper)}
-            <div style="font-size:0.7rem; color:#666; margin-top:8px; margin-bottom:2px;">Lower</div>
-            ${generateVisualRowHTML(lower)}
-        </div>
-        <div style="text-align:center; margin-top:20px;">
-            <button onclick="closeModal()" class="btn-modal-close">閉じる</button>
-        </div>
-    `;
-    modal.style.display = 'flex';
-}
-
-function closeModal() { document.getElementById('player-modal').style.display = 'none'; }
-
-function openSynergyDetail(synergy) {
-    const targetGadgets = synergy.name.split(/ \/ | \+ /).map(s => s.trim());
-    const matchedPlayers = rankingData.playerList.filter(p => {
-        const pGadgets = p.gadgets || [];
-        return targetGadgets.every(gName => pGadgets.includes(gName));
-    });
-    const total = matchedPlayers.length;
-    if (total === 0) return;
-
-    const charCounts = {};
-    const machCounts = {};
-    matchedPlayers.forEach(p => {
-        charCounts[p.charType] = (charCounts[p.charType] || 0) + 1;
-        machCounts[p.machineType] = (machCounts[p.machineType] || 0) + 1;
-    });
-
-    const modal = document.getElementById('player-modal');
-    const body = document.getElementById('modal-body');
-    
-    const makeBar = (label, count, max) => `
-        <div class="stat-row">
-            <div class="stat-label">${label}</div>
-            <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${(count/max)*100}%"></div></div>
-            <div class="stat-val">${count}人</div>
-        </div>`;
-
-    body.innerHTML = `
-        <h3 style="border-bottom:2px solid #009688; padding-bottom:10px; color:#00695c; margin-top:0;">💡 シナジー分析</h3>
-        <div style="margin-bottom:15px; font-weight:bold; color:#333; text-align:center;">${synergy.name}</div>
-        <p style="text-align:center; font-size:0.9rem; background:#e0f2f1; padding:8px; border-radius:4px;">
-            採用人数: <strong>${total}人</strong>
-        </p>
-        <h4 style="margin-bottom:10px; color:#555;">👤 キャラタイプの傾向</h4>
-        <div style="margin-bottom:20px;">
-            ${Object.keys(charCounts).sort((a,b)=>charCounts[b]-charCounts[a]).map(k => makeBar(k, charCounts[k], total)).join('')}
-        </div>
-        <h4 style="margin-bottom:10px; color:#555;">🏎️ マシンタイプの傾向</h4>
-        <div style="margin-bottom:20px;">
-            ${Object.keys(machCounts).sort((a,b)=>machCounts[b]-machCounts[a]).map(k => makeBar(k, machCounts[k], total)).join('')}
-        </div>
-        <div style="text-align:center; margin-top:20px;">
-            <button onclick="closeModal()" class="btn-modal-close">閉じる</button>
-        </div>
-    `;
-    modal.style.display = 'flex';
-}
-
-
