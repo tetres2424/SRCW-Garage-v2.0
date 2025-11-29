@@ -45,45 +45,50 @@
                     </ul>
                 </div>
 
-                <div class="card" id="setup-card">
-                    <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
-                        <h4 style="margin: 0 0 10px 0; color:#555;">基本構成 (Character & Machine Custom)</h4>
-                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                            <div style="flex: 1; min-width: 200px;">
-                                <label style="font-size:0.8rem; color:#666; font-weight:bold;">1. キャラクター</label>
-                                <select id="charSelect" onchange="updateCharMachineInfo()" style="width:100%; padding:8px; border-radius:4px; border:1px solid #ccc; background:#fff;">
-                                    <option value="" disabled selected>選択してください</option>
-                                </select>
-                                <div id="charSpec" style="margin-top:5px; font-size:0.8rem; color:#0055ff; min-height:1.2em;"></div>
-                            </div>
-                            <div style="flex: 2; min-width: 300px; background:#f9f9f9; padding:10px; border-radius:6px;">
-                                <label style="font-size:0.8rem; color:#666; font-weight:bold;">2. マシンタイプ & パーツ</label>
-                                <select id="machineTypeSelect" onchange="changeMachineType()" style="width:100%; padding:8px; margin-bottom:10px; border-radius:4px; border:1px solid #ccc;">
-                                    <option value="" disabled selected>マシンのタイプを選択</option>
-                                    <option value="スピード">スピード (3パーツ)</option>
-                                    <option value="アクセル">アクセル (3パーツ)</option>
-                                    <option value="ハンドリング">ハンドリング (3パーツ)</option>
-                                    <option value="パワー">パワー (3パーツ)</option>
-                                    <option value="ダッシュ">ダッシュ (2パーツ/タイヤなし)</option>
-                                </select>
-                                <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-                                    <select id="part1Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px; font-size:0.85rem;" disabled><option value="">フロント</option></select>
-                                    <select id="part2Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px; font-size:0.85rem;" disabled><option value="">リア</option></select>
-                                    <select id="part3Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px; font-size:0.85rem;" disabled><option value="">タイヤ</option></select>
-                                </div>
-                                <div id="machineSpec" style="margin-top:5px; font-size:0.8rem; color:#d32f2f; min-height:1.2em;"></div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 15px; background: #e3f2fd; padding: 10px; border-radius: 4px; text-align: center;">
-                            <strong style="color:#333; font-size:0.9rem;">🏁 最終ステータス</strong>
-                            <div id="totalStats" style="font-weight:bold; font-size:1.1rem; color:#0055ff; margin-top:5px;">
-                                S:- A:- H:- P:- D:-
-                            </div>
-                        </div>
-                    </div>
+                <div class="card">
+                    <h4 style="margin: 0 0 15px 0; color:#555;">基本構成 (Character & Machine Custom)</h4>
 
-                    <div class="row-container"><div class="row-label"><span>上段 (Upper)</span><span>Cost: <span id="costUpper">0</span>/3</span></div><div class="visual-row" id="visualUpper"></div></div>
-                    <div class="row-container"><div class="row-label"><span>下段 (Lower)</span><span>Cost: <span id="costLower">0</span>/3</span></div><div class="visual-row" id="visualLower"></div></div>
+                    <div id="capture-target" style="background-color:#fff; padding:5px; border-radius:4px;">
+                        
+                        <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 200px;">
+                                    <label style="font-size:0.8rem; color:#666; font-weight:bold;">1. キャラクター</label>
+                                    <select id="charSelect" onchange="updateCharMachineInfo()" style="width:100%; padding:8px; border-radius:4px; border:1px solid #ccc; background:#fff;">
+                                        <option value="" disabled selected>選択してください</option>
+                                    </select>
+                                    <div id="charSpec" style="margin-top:5px; font-size:0.8rem; color:#0055ff; min-height:1.2em;"></div>
+                                </div>
+                                <div style="flex: 2; min-width: 300px; background:#f9f9f9; padding:10px; border-radius:6px;">
+                                    <label style="font-size:0.8rem; color:#666; font-weight:bold;">2. マシンタイプ & パーツ</label>
+                                    <select id="machineTypeSelect" onchange="changeMachineType()" style="width:100%; padding:8px; margin-bottom:10px; border-radius:4px; border:1px solid #ccc;">
+                                        <option value="" disabled selected>マシンのタイプを選択</option>
+                                        <option value="スピード">スピード (3パーツ)</option>
+                                        <option value="アクセル">アクセル (3パーツ)</option>
+                                        <option value="ハンドリング">ハンドリング (3パーツ)</option>
+                                        <option value="パワー">パワー (3パーツ)</option>
+                                        <option value="ダッシュ">ダッシュ (2パーツ/タイヤなし)</option>
+                                    </select>
+                                    <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                                        <select id="part1Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px; font-size:0.85rem;" disabled><option value="">フロント</option></select>
+                                        <select id="part2Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px; font-size:0.85rem;" disabled><option value="">リア</option></select>
+                                        <select id="part3Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px; font-size:0.85rem;" disabled><option value="">タイヤ</option></select>
+                                    </div>
+                                    <div id="machineSpec" style="margin-top:5px; font-size:0.8rem; color:#d32f2f; min-height:1.2em;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 15px; background: #e3f2fd; padding: 10px; border-radius: 4px; text-align: center;">
+                                <strong style="color:#333; font-size:0.9rem;">🏁 最終ステータス</strong>
+                                <div id="totalStats" style="font-weight:bold; font-size:1.1rem; color:#0055ff; margin-top:5px;">
+                                    S:- A:- H:- P:- D:-
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row-container"><div class="row-label"><span>上段 (Upper)</span><span>Cost: <span id="costUpper">0</span>/3</span></div><div class="visual-row" id="visualUpper"></div></div>
+                        <div class="row-container"><div class="row-label"><span>下段 (Lower)</span><span>Cost: <span id="costLower">0</span>/3</span></div><div class="visual-row" id="visualLower"></div></div>
+                    
+                    </div>
                     <div id="message"></div>
 
                     <div class="controls" style="margin-top: 20px; display: block;"> 
@@ -110,7 +115,6 @@
                         <button class="btn-random" style="background-color: #673ab7;" onclick="setAiOriginalSetup()">🧠AI生成</button>
                     </div>
                 </div>
-
                 <div class="card">
                     <h4>オリジナルガジェット登録</h4>
                     <div class="custom-area">
@@ -216,3 +220,4 @@
     <script src="js/script.js"></script>
 </body>
 </html>
+
