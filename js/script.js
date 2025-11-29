@@ -896,4 +896,27 @@ function openSynergyDetail(synergy) {
         </div>
     `;
     modal.style.display = 'flex';
+
+}
+// --- 構成を画像として保存 ---
+function saveAsImage() {
+    const target = document.getElementById('setup-card');
+    if (!target) return;
+
+    // 撮影中はボタンなどを隠したい場合、ここで一時的にstyleを変更する処理を入れることも可能です
+    // 今回はそのまま見たままを保存します
+
+    // html2canvasを使って画像化
+    html2canvas(target, {
+        backgroundColor: "#ffffff", // 背景色を白に指定
+        scale: 2 // 高画質で出力 (スマホでも綺麗に見えるように)
+    }).then(canvas => {
+        // 画像リンクを作成してダウンロードさせる
+        const link = document.createElement('a');
+        link.download = 'srcw_setup.png'; // 保存ファイル名
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        showMessage("📸 画像を保存しました！");
+    });
 }
