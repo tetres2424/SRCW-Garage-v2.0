@@ -897,3 +897,62 @@ function openSynergyDetail(synergy) {
     `;
     modal.style.display = 'flex';
 }
+// --- 画像保存機能 (タイトル付き) ---
+function saveAsImage() {
+    // 1. 撮影対象の取得 (capture-target がなければ setup-card を探す安全策)
+    let target = document.getElementById('capture-target');
+    if (!target) target = document.getElementById('setup-card');
+    
+    if (!target) {
+        alert("エラー: 撮影対象が見つかりません。");
+        return;
+    }
+
+    if (typeof html2canvas === 'undefined') {
+        alert("エラー: 画像生成ライブラリが読み込まれていません。");
+        return;
+    }
+
+    // 2. タイトル文字の取得
+    const titleInput = document.getElementById('memoTitle');
+    // 入力がなければデフォルト名、あればその値を使う
+    const titleText = (titleInput && titleInput.value.trim()) ? titleInput.value : "SRCW Custom Setup";
+
+    // 3. 一時的にタイトル表示用の要素を作って、撮影対象の一番上に挿入する
+    const titleNode = document.createElement('div');
+    titleNode.innerText = titleText;
+    // --- タイトルのデザイン設定 ---
+    titleNode.style.textAlign = "center";
+    titleNode.style.fontSize = "1.4rem";
+    titleNode.style.fontWeight = "bold";
+    titleNode.style.color = "#0055ff";
+    titleNode.style.marginBottom = "15px";
+    titleNode.style.paddingBottom = "10px";
+    titleNode.style.borderBottom = "2px solid #eee";
+    titleNode.style.fontFamily = '"Helvetica Neue", Arial, sans-serif';
+    // ---------------------------
+    
+    // ターゲットの先頭に挿入
+    target.insertBefore(titleNode, target.firstChild);
+
+    // 4. 撮影実行
+    html2canvas(target, {
+        backgroundColor: "#ffffff",
+        scale: 2 // 高画質
+    }).then(canvas => {
+        // 保存処理
+        const link = document.createElement('a');
+        link.download = `srcw_${Date.now()}.png`; // ファイル名にタイムスタンプをつける
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        // 5. 後片付け（追加したタイトルを削除）
+        titleNode.remove();
+        
+        showMessage("📸 画像を保存しました！");
+    }).catch(err => {
+        console.error(err);
+        titleNode.remove(); // エラー時も削除
+        alert("画像の保存に失敗しました。");
+    });
+}
