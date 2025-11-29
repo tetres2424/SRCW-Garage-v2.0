@@ -4,179 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SRCW-Garage | ソニックレーシングCW 構成ツール</title>
-    
     <link rel="stylesheet" href="css/style.css">
-    
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body>
 
-    <h1 onclick="showPage('main')" style="cursor:pointer;">
+    <h1 onclick="location.reload()" style="cursor:pointer;">
         Sonic Racing CW<br>
         <span style="font-size: 2rem; font-weight: bold;">SRCW-Garage</span>
     </h1>
 
-    <div class="nav-menu">
-        <button class="nav-btn active" id="nav-main" onclick="showPage('main')">🛠️ 構成ツール</button>
-        <button class="nav-btn" id="nav-ranking-list" onclick="showPage('ranking-list')">📋 Top50 リスト</button>
-        <button class="nav-btn" id="nav-ranking-stats" onclick="showPage('ranking-stats')">📊 データ分析</button>
-    </div>
-
-    <div id="app-container">
+    <div class="container">
         
-        <div id="page-main">
-            <div class="container">
-                <div class="alert-box">
-                    <h4 style="margin-top:0; margin-bottom:10px; color:#856404; font-size:1rem;">ℹ️ ツールからのお知らせ</h4>
-                    <ul style="margin:0; padding-left:20px;">
-                        <li style="margin-bottom: 5px;">
-                            <strong>ランキングデータ:</strong> <span style="color:#d32f2f; font-weight:bold;">Top50 (11/11 20:00時点)</span> の集計結果です。
-                        </li>
-                        <li style="margin-bottom: 5px;">
-                            <strong>AI・ランダム機能:</strong> 重複しない組み合わせで選出されます。
-                        </li>
-                        <li>
-                            <strong>詳細データ:</strong> <a href="https://w.atwiki.jp/sonicracingcw/" target="_blank" style="color:#d32f2f; text-decoration:underline;">ソニックレーシング CW @ ウィキ</a> をご確認ください。
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="card" id="setup-card">
-                    <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
-                        <h4 style="margin: 0 0 10px 0; color:#555;">基本構成 (Character & Machine Custom)</h4>
-                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                            <div style="flex: 1; min-width: 200px;">
-                                <label style="font-size:0.8rem; color:#666; font-weight:bold;">1. キャラクター</label>
-                                <select id="charSelect" onchange="updateCharMachineInfo()" style="width:100%; padding:8px;"><option value="" disabled selected>選択してください</option></select>
-                                <div id="charSpec" style="margin-top:5px; font-size:0.8rem; color:#0055ff; min-height:1.2em;"></div>
-                            </div>
-                            <div style="flex: 2; min-width: 300px; background:#f9f9f9; padding:10px; border-radius:6px;">
-                                <label style="font-size:0.8rem; color:#666; font-weight:bold;">2. マシンタイプ & パーツ</label>
-                                <select id="machineTypeSelect" onchange="changeMachineType()" style="width:100%; padding:8px; margin-bottom:10px;"><option value="" disabled selected>タイプ選択</option>
-                                    <option value="スピード">スピード</option><option value="アクセル">アクセル</option><option value="ハンドリング">ハンドリング</option><option value="パワー">パワー</option><option value="ダッシュ">ダッシュ</option>
-                                </select>
-                                <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-                                    <select id="part1Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px;" disabled></select>
-                                    <select id="part2Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px;" disabled></select>
-                                    <select id="part3Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px;" disabled></select>
-                                </div>
-                                <div id="machineSpec" style="margin-top:5px; font-size:0.8rem; color:#d32f2f; min-height:1.2em;"></div>
-                            </div>
-                        </div>
-                        <div style="margin-top: 15px; background: #e3f2fd; padding: 10px; border-radius: 4px; text-align: center;">
-                            <strong style="color:#333; font-size:0.9rem;">🏁 最終ステータス</strong>
-                            <div id="totalStats" style="font-weight:bold; font-size:1.1rem; color:#0055ff; margin-top:5px;">S:- A:- H:- P:- D:-</div>
-                        </div>
-                    </div>
-
-                    <div class="row-container"><div class="row-label"><span>上段 (Upper)</span><span>Cost: <span id="costUpper">0</span>/3</span></div><div class="visual-row" id="visualUpper"></div></div>
-                    <div class="row-container"><div class="row-label"><span>下段 (Lower)</span><span>Cost: <span id="costLower">0</span>/3</span></div><div class="visual-row" id="visualLower"></div></div>
-                </div>
-                <div id="message"></div>
-
-                <div class="card">
-                    <div class="controls" style="margin-top: 20px; display: block;"> 
-                        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
-                            <div style="flex-grow: 1; min-width: 200px; display:flex; gap:5px; flex-direction:column;">
-                                <div style="text-align:right;"><button id="btnSort" onclick="toggleSort()" style="background-color: #607d8b; font-size: 0.75rem; padding: 4px 8px; border-radius: 15px;">📊 使用率順に並べ替え</button></div>
-                                <select id="gadgetSelect" onchange="showGadgetDescription()" style="width: 100%;"><option value="" disabled selected>ガジェットを選択してください</option></select>
-                            </div>
-                            <div style="display: flex; gap: 5px; flex-shrink: 0; margin-top: 24px;">
-                                <button class="btn-add" onclick="tryAddGadget()">追加</button>
-                                <button class="btn-reset" onclick="resetCurrent()">リセット</button>
-                            </div>
-                        </div>
-                        <div id="gadgetDescPreview" style="width: 100%; height: 110px; padding: 10px; background: #f1f8ff; border: 1px solid #c8e1ff; border-radius: 4px; font-size: 0.85rem; color: #444; overflow-y: auto; box-sizing: border-box; line-height: 1.4;">（ここにガジェットの効果が表示されます）</div>
-                    </div>
-                    <div class="controls" style="margin-top: 15px;">
-                        <button class="btn-random" onclick="setRandomGadgets()">🎲ガジェットのみ</button>
-                        <button class="btn-random" style="background-color: #e91e63;" onclick="setRandomFull()">🎲全ランダム</button>
-                        <button class="btn-random" style="background-color: #673ab7;" onclick="setAiOriginalSetup()">🧠AI生成</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h4>オリジナルガジェット登録</h4>
-                    <div class="custom-area">
-                        <input type="text" id="customName" placeholder="ガジェット名" style="flex-grow: 1;">
-                        <select id="customCost" style="width: 100px;"><option value="1">コスト 1</option><option value="2">コスト 2</option><option value="3">コスト 3</option></select>
-                        <button class="btn-reg" onclick="registerCustomGadget()">追加</button>
-                    </div>
-                    <div style="margin-top: 15px;">
-                        <h5 style="margin: 0 0 5px 0; color:#666;">登録済みリスト</h5>
-                        <div id="customListContainer" class="custom-list"><p style="text-align:center; color:#999; margin:5px;">登録なし</p></div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3>保存と共有</h3>
-                    <div class="controls" style="justify-content: flex-start; margin-bottom: 10px;">
-                        <input type="text" id="memoTitle" placeholder="構成名を入力" style="padding: 8px; flex-grow: 1;">
-                        <button class="btn-save" onclick="saveMemo()">メモ保存</button>
-                    </div>
-                    <div id="memoList" class="memo-list"></div>
-                    <button class="btn-share" style="background-color: #4caf50; color: white; margin-top:10px;" onclick="saveAsImage()">📸 構成を画像で保存</button>
-                    <button class="btn-share" onclick="generateShareUrl()">🔗 共有URLを発行</button>
-                    <div id="shareArea"><input type="text" id="shareUrl" readonly onclick="this.select()"></div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="page-ranking-list" style="display: none;">
-            <div class="container">
-                <div class="card">
-                    <h2 style="text-align:center; color:#ff9800; border-bottom:2px solid #ffe0b2; padding-bottom:10px;">🏆 Top50 プレイヤー一覧</h2>
-                    <p style="text-align:center; font-size:0.85rem; color:#666;">
-                        クリックで詳細構成を表示します。<br>
-                        集計: 2025/11/11 20:00
-                    </p>
-                    <div id="player-list-container" style="height: 600px; overflow-y: auto; border: 1px solid #eee; border-radius:6px; background:#fff;"></div>
-                </div>
-            </div>
+        <div class="alert-box">
+            <h4 style="margin-top:0; margin-bottom:10px; color:#856404; font-size:1rem;">ℹ️ ツールからのお知らせ</h4>
+            <ul style="margin:0; padding-left:20px;">
+                <li style="margin-bottom: 8px;">
+                    <strong>ランキングデータの性質:</strong><br>
+                    Top100データは<span style="color:#d32f2f; font-weight:bold;">「レート9999先着順」</span>のため、最新環境とは異なる場合があります。
+                </li>
+                <li>
+                    <strong>詳細データ:</strong><br>
+                    <a href="https://w.atwiki.jp/sonicracingcw/" target="_blank" style="color:#d32f2f; text-decoration:underline;">ソニックレーシング CW @ ウィキ</a> をご確認ください。
+                </li>
+            </ul>
         </div>
 
-        <div id="page-ranking-stats" style="display: none;">
-            <div class="container">
-                <div class="card">
-                    <h2 style="text-align:center; color:#009688; border-bottom:2px solid #b2dfdb; padding-bottom:10px;">📊 環境メタ分析</h2>
-                    
-                    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom: 30px;">
-                        <div style="flex:1; min-width:300px;">
-                            <h4 style="color:#555; margin-bottom:10px;">🔫 ガジェット使用率 (Top10)</h4>
-                            <div id="rank-gadgets"></div>
-                        </div>
-                        <div style="flex:1; min-width:300px;">
-                            <h4 style="color:#555; margin-bottom:10px;">👤 キャラタイプ分布</h4>
-                            <div id="rank-chartypes"></div>
-
-                            <h4 style="color:#555; margin-top:30px; margin-bottom:10px;">🏎️ マシンタイプ使用率</h4>
-                            <div id="rank-machines"></div>
-                        </div>
+        <div class="card" id="setup-card">
+            <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                <h4 style="margin: 0 0 10px 0; color:#555;">基本構成 (Character & Machine Custom)</h4>
+                
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="font-size:0.8rem; color:#666; font-weight:bold;">1. キャラクター</label>
+                        <select id="charSelect" onchange="updateCharMachineInfo()" style="width:100%; padding:8px; border-radius:4px; border:1px solid #ccc; background:#fff;">
+                            <option value="" disabled selected>選択してください</option>
+                        </select>
+                        <div id="charSpec" style="margin-top:5px; font-size:0.8rem; color:#0055ff; min-height:1.2em;"></div>
                     </div>
 
-                    <div style="border-top: 1px dashed #ccc; padding-top: 20px;">
-                        <h3 style="text-align:center; color:#555; margin-bottom:5px;">💡 流行シナジー (Top4)</h3>
-                        <p style="text-align:center; font-size:0.8rem; color:#888; margin-bottom:15px;">
-                            クリックで詳細分析を表示
-                        </p>
-                        <div id="rank-synergy" style="max-width: 800px; margin: 0 auto;"></div>
+                    <div style="flex: 2; min-width: 300px; background:#f9f9f9; padding:10px; border-radius:6px;">
+                        <label style="font-size:0.8rem; color:#666; font-weight:bold;">2. マシンタイプ & パーツ</label>
+                        <select id="machineTypeSelect" onchange="changeMachineType()" style="width:100%; padding:8px; margin-bottom:10px; border-radius:4px; border:1px solid #ccc;">
+                            <option value="" disabled selected>マシンのタイプを選択</option>
+                            <option value="スピード">スピード (3パーツ)</option>
+                            <option value="アクセル">アクセル (3パーツ)</option>
+                            <option value="ハンドリング">ハンドリング (3パーツ)</option>
+                            <option value="パワー">パワー (3パーツ)</option>
+                            <option value="ダッシュ">ダッシュ (2パーツ/タイヤなし)</option>
+                        </select>
+
+                        <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                            <select id="part1Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px; font-size:0.85rem;" disabled><option value="">フロント</option></select>
+                            <select id="part2Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px; font-size:0.85rem;" disabled><option value="">リア</option></select>
+                            <select id="part3Select" onchange="updateCharMachineInfo()" style="flex:1; min-width:80px; padding:6px; font-size:0.85rem;" disabled><option value="">タイヤ</option></select>
+                        </div>
+                        <div id="machineSpec" style="margin-top:5px; font-size:0.8rem; color:#d32f2f; min-height:1.2em;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px; background: #e3f2fd; padding: 10px; border-radius: 4px; text-align: center;">
+                    <strong style="color:#333; font-size:0.9rem;">🏁 最終ステータス</strong>
+                    <div id="totalStats" style="font-weight:bold; font-size:1.1rem; color:#0055ff; margin-top:5px;">
+                        S:- A:- H:- P:- D:-
                     </div>
                 </div>
             </div>
+
+            <div class="row-container"><div class="row-label"><span>上段 (Upper)</span><span>Cost: <span id="costUpper">0</span>/3</span></div><div class="visual-row" id="visualUpper"></div></div>
+            <div class="row-container"><div class="row-label"><span>下段 (Lower)</span><span>Cost: <span id="costLower">0</span>/3</span></div><div class="visual-row" id="visualLower"></div></div>
+        </div>
+        <div id="message"></div>
+
+        <div class="card">
+            <div class="controls" style="margin-top: 20px; display: block;"> 
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;">
+                    <div style="flex-grow: 1; min-width: 200px; display:flex; gap:5px; flex-direction:column;">
+                        <div style="text-align:right;">
+                            <button id="btnSort" onclick="toggleSort()" style="background-color: #607d8b; font-size: 0.75rem; padding: 4px 8px; border-radius: 15px;">📊 使用率順に並べ替え</button>
+                        </div>
+                        <select id="gadgetSelect" onchange="showGadgetDescription()" style="width: 100%;">
+                            <option value="" disabled selected>ガジェットを選択してください</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 5px; flex-shrink: 0; margin-top: 24px;">
+                        <button class="btn-add" onclick="tryAddGadget()">追加</button>
+                        <button class="btn-reset" onclick="resetCurrent()">リセット</button>
+                    </div>
+                </div>
+                <div id="gadgetDescPreview" style="width: 100%; height: 110px; padding: 10px; background: #f1f8ff; border: 1px solid #c8e1ff; border-radius: 4px; font-size: 0.85rem; color: #444; overflow-y: auto; box-sizing: border-box; line-height: 1.4;">（ここにガジェットの効果が表示されます）</div>
+            </div>
+
+            <div class="controls" style="margin-top: 15px;">
+                <button class="btn-random" onclick="setRandomGadgets()">🎲ガジェットのみ</button>
+                <button class="btn-random" style="background-color: #e91e63;" onclick="setRandomFull()">🎲全ランダム</button>
+                <button class="btn-random" style="background-color: #673ab7;" onclick="setAiOriginalSetup()">🧠AI生成</button>
+            </div>
         </div>
 
-        <div id="player-modal" class="modal-overlay" onclick="closeModal(event)">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <span class="modal-close" onclick="closeModal()">&times;</span>
-                <div id="modal-body"></div>
+        <div class="card">
+            <h3>保存と共有</h3>
+            <div class="controls" style="justify-content: flex-start; margin-bottom: 10px;">
+                <input type="text" id="memoTitle" placeholder="構成名を入力" style="padding: 8px; flex-grow: 1;">
+                <button class="btn-save" onclick="saveMemo()">メモ保存</button>
+            </div>
+            <div id="memoList" class="memo-list"></div>
+            
+            <button class="btn-share" style="background-color: #4caf50; color: white; margin-top:10px;" onclick="saveAsImage()">📸 構成を画像で保存</button>
+            <button class="btn-share" onclick="generateShareUrl()">🔗 共有URLを発行</button>
+            <div id="shareArea"><input type="text" id="shareUrl" readonly onclick="this.select()"></div>
+        </div>
+
+        <div class="card">
+            <h4>オリジナルガジェット登録</h4>
+            <div class="custom-area">
+                <input type="text" id="customName" placeholder="ガジェット名" style="flex-grow: 1;">
+                <select id="customCost" style="width: 100px;"><option value="1">コスト 1</option><option value="2">コスト 2</option><option value="3">コスト 3</option></select>
+                <button class="btn-reg" onclick="registerCustomGadget()">追加</button>
+            </div>
+            <div style="margin-top: 15px;">
+                <div id="customListContainer" class="custom-list"><p style="text-align:center; color:#999; margin:5px;">登録なし</p></div>
             </div>
         </div>
 
     </div>
 
     <footer class="footer">
-        <p><strong>【謝辞・データ出典】</strong><br>
-        本ツールのデータは <a href="https://w.atwiki.jp/sonicracingcw/" target="_blank" style="color:#0055ff;">『ソニックレーシング クロスワールド 攻略@wiki』</a> 様を参考に作成いたしました。</p>
+        <p>Created with respect for Sonic Racing CW community.</p>
     </footer>
 
     <script src="js/data.js"></script>
