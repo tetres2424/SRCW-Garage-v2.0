@@ -50,15 +50,16 @@ function showPage(pageId) {
     window.scrollTo(0, 0);
 }
 
-// --- 画像保存機能 (ここが追加された機能です) ---
+// --- 画像保存機能 (範囲修正版) ---
 function saveAsImage() {
-    const target = document.getElementById('setup-card');
+    // ★変更点: ターゲットIDを 'capture-target' に変更
+    const target = document.getElementById('capture-target');
+    
     if (!target) {
-        alert("エラー: 撮影対象が見つかりません。(id='setup-card' がありません)");
+        alert("エラー: 撮影対象が見つかりません。");
         return;
     }
 
-    // html2canvasが読み込まれているか確認
     if (typeof html2canvas === 'undefined') {
         alert("エラー: 画像生成ライブラリが読み込まれていません。");
         return;
@@ -78,7 +79,6 @@ function saveAsImage() {
         alert("画像の保存に失敗しました。");
     });
 }
-
 // --- キャラ・マシン操作 ---
 function initCharSelect() {
     const cSelect = document.getElementById('charSelect');
@@ -824,3 +824,4 @@ function openSynergyDetail(synergy) {
     `;
     modal.style.display = 'flex';
 }
+
