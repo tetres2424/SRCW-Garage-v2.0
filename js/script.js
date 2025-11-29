@@ -51,12 +51,13 @@ function showPage(pageId) {
 }
 
 // --- 画像保存機能 (範囲修正版) ---
+// --- 画像保存機能 ---
 function saveAsImage() {
-    // ★変更点: ターゲットIDを 'capture-target' に変更
+    // 修正点: ターゲットIDを 'capture-target' に指定
     const target = document.getElementById('capture-target');
     
     if (!target) {
-        alert("エラー: 撮影対象が見つかりません。");
+        alert("エラー: 撮影対象が見つかりません。(ID: capture-target)");
         return;
     }
 
@@ -65,9 +66,10 @@ function saveAsImage() {
         return;
     }
 
+    // 背景を白にして高画質で保存
     html2canvas(target, {
         backgroundColor: "#ffffff",
-        scale: 2 // 高画質設定
+        scale: 2 
     }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'srcw_setup.png';
@@ -824,4 +826,5 @@ function openSynergyDetail(synergy) {
     `;
     modal.style.display = 'flex';
 }
+
 
