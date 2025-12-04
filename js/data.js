@@ -35,7 +35,13 @@
         { id: "c43", name: "アレックス", type: "パワー", speed: 11, accel: 10, handling: 7, power: 18, dash: 14 },
         { id: "c45", name: "クリーパー", type: "アクセル", speed: 14, accel: 19, handling: 9, power: 11, dash: 7 },
         { id: "c47", name: "スポンジ・ボブ", type: "ハンドリング", speed: 7, accel: 14, handling: 16, power: 10, dash: 13 },
-        { id: "c49", name: "パトリック", type: "パワー", speed: 13, accel: 9, handling: 6, power: 17, dash: 15 }
+        { id: "c49", name: "パトリック", type: "パワー", speed: 13, accel: 9, handling: 6, power: 17, dash: 15 },
+{ id: "c50", name: "タングル", type: "アクセル", speed: 15, accel: 9, handling: 16, power: 14, dash: 6 },
+{ id: "c51", name: "ウィスパー", type: "ダッシュ", speed: 7, accel: 13, handling: 16, power: 5, dash: 19 },
+{ id: "c52", name: "ナイツ", type: "スピード", speed: 17, accel: 6, handling: 13, power: 15, dash: 9 },
+{ id: "c53", name: "アイアイ", type: "ハンドリング", speed: 5, accel: 16, handling: 17, power: 8, dash: 14 },
+{ id: "c54", name: "パックマン", type: "アクセル", speed: 15, accel: 18, handling: 19, power: 12, dash: 6 },
+{ id: "c55", name: "ブリンキー", type: "スピード", speed: 18, accel: 6, handling: 12, power: 15, dash: 9 }
     ];
 
     const machineParts = [
@@ -50,6 +56,7 @@
         { id: "ms08", type: "スピード", name: "ワイルドGT", s: 19, a: 5, h: 13, p: 16, d: 7 },
         { id: "ms09", type: "スピード", name: "バスターM", s: 19, a: 5, h: 13, p: 16, d: 7 },
         { id: "ms10", type: "スピード", name: "アルセーヌウィング", s: 17, a: 6, h: 13, p: 15, d: 9 },
+	{ id: "ms11", type: "スピード", name: "バナナクルーザー", s: 17, a: 7, h: 12, p: 14, d: 10 },
         // 2. アクセルタイプ
         { id: "ma01", type: "アクセル", name: "ホワールウィンド", s: 15, a: 20, h: 7, p: 13, d: 5 },
         { id: "ma02", type: "アクセル", name: "ジャンブルレイジ", s: 14, a: 20, h: 8, p: 12, d: 6 },
@@ -72,6 +79,7 @@
         { id: "mh09", type: "ハンドリング", name: "ネオサイクロン", s: 7, a: 13, h: 20, p: 9, d: 11 },
         { id: "mh10", type: "ハンドリング", name: "マインカート", s: 7, a: 14, h: 16, p: 10, d: 13 },
         { id: "mh11", type: "ハンドリング", name: "パティワゴン", s: 7, a: 14, h: 17, p: 10, d: 12 },
+	{ id: "mh12", type: "ハンドリング", name: "パックマンモービル", s: 6, a: 15, h: 17, p: 9, d: 13 },
         // 4. パワータイプ
         { id: "mp01", type: "パワー", name: "ランドスマッシャー", s: 13, a: 7, h: 5, p: 20, d: 15 },
         { id: "mp02", type: "パワー", name: "ロードドラグーン", s: 12, a: 8, h: 6, p: 20, d: 14 },
@@ -95,7 +103,8 @@
         { id: "md08", type: "ダッシュ", name: "クワッドコプター", s: 11, a: 19, h: 23, p: 8, d: 29 },
         { id: "md09", type: "ダッシュ", name: "ジョーズロケット", s: 12, a: 19, h: 23, p: 8, d: 28 },
         { id: "md10", type: "ダッシュ", name: "ブルースター", s: 14, a: 17, h: 22, p: 10, d: 27 },
-        { id: "md11", type: "ダッシュ", name: "ディーヴァマッキナ", s: 14, a: 18, h: 22, p: 10, d: 26 }
+        { id: "md11", type: "ダッシュ", name: "ディーヴァマッキナ", s: 14, a: 18, h: 22, p: 10, d: 26 },
+	{ id: "md12", type: "ダッシュ", name: "ドリームスリーパー", s: 13, a: 18, h: 23, p: 9, d: 27 },
     ];
 
     // ガジェットデータ
