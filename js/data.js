@@ -152,14 +152,25 @@
         { id: "0513", name: "ダッシュチューン1", cost: 1, type: "param-boost", desc: "ダッシュマシンならD+10/S-4、それ以外はD+4", calc: (s, ctx) => { if(ctx.mT==="ダッシュ"){ s.d+=10; s.s-=4; } else { s.d+=4; } } },
         { id: "0514", name: "ダッシュチューン2", cost: 1, type: "param-boost", desc: "ダッシュマシンならD+10/S-2/P-2、それ以外はD+4", calc: (s, ctx) => { if(ctx.mT==="ダッシュ"){ s.d+=10; s.s-=2; s.p-=2; } else { s.d+=4; } } },
 
+        // ■■■ supportカテゴリに追加 (ID: 0608, 0609, 0610) ■■■
+        { id: "0608", name: "リングリカバリー", cost: 1, type: "support", desc: "被弾後リング10枚獲得" },
+        { id: "0609", name: "無敵リカバリー", cost: 2, type: "support", desc: "被弾後約7秒無敵" },
+        { id: "0610", name: "アイテムリカバリー", cost: 2, type: "support", desc: "被弾後アイテム獲得" },
+        // ■■■ 既存のsupportカテゴリ ■■■
         { id: "0601", name: "グリップ力強化", cost: 1, type: "support", desc: "滑る路面でグリップ力アップ" },
         { id: "0602", name: "落下時ブーストリカバー", cost: 1, type: "support", desc: "落下復帰時にブースト獲得" },
         { id: "0603", name: "壁リングガード", cost: 1, type: "support", desc: "壁衝突時のリング減少を防ぐ" },
         { id: "0604", name: "無敵スタート", cost: 2, type: "support", desc: "スタート直後約40秒無敵" },
+        // ■■■ 無敵スタートの後に追加 (ID: 0611) ■■■
+        { id: "0611", name: "無敵ファイナル", cost: 2, type: "support", desc: "三周目約20秒無敵" },
         { id: "0605", name: "アイテムロスト無効化", cost: 2, type: "support", desc: "被弾時のアイテムロストを防ぐ" },
         { id: "0606", name: "クイックリカバー", cost: 3, type: "support", desc: "復帰速度アップ" },
         { id: "0607", name: "リングガード", cost: 2, type: "support", desc: "被弾時のリング減少を半減" },
 
+        // ■■■ item-controlカテゴリに追加 (ID: 0708, 0709) ■■■
+        { id: "0708", name: "時々獲得アイテム2倍", cost: 2, type: "item-control", desc: "50%でアイテムが二倍になる" },
+        { id: "0709", name: "獲得アイテム2倍", cost: 3, type: "item-control", desc: "アイテムが二倍になり、全能力-10",calc: (s) => { s.s -= 10;s.a -= 10;s.h -= 10;s.p -= 10;s.d -= 10;} },
+        // ■■■ 既存のitem-controlカテゴリ ■■■
         { id: "0701", name: "アイテムストックトレード", cost: 3, type: "item-control", desc: "アイテム順序入れ替え可能" },
         { id: "0702", name: "アイテムストックプラス", cost: 2, type: "item-control", desc: "アイテム所持数+1" },
         { id: "0703", name: "設置アイテム確率アップ", cost: 1, type: "item-control", desc: "設置アイテム出現率アップ" },
