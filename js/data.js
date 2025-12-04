@@ -152,21 +152,26 @@
         { id: "0513", name: "ダッシュチューン1", cost: 1, type: "param-boost", desc: "ダッシュマシンならD+10/S-4、それ以外はD+4", calc: (s, ctx) => { if(ctx.mT==="ダッシュ"){ s.d+=10; s.s-=4; } else { s.d+=4; } } },
         { id: "0514", name: "ダッシュチューン2", cost: 1, type: "param-boost", desc: "ダッシュマシンならD+10/S-2/P-2、それ以外はD+4", calc: (s, ctx) => { if(ctx.mT==="ダッシュ"){ s.d+=10; s.s-=2; s.p-=2; } else { s.d+=4; } } },
 
-        { id: "0601", name: "グリップ力強化", cost: 1, type: "support", desc: "滑る路面でグリップ力アップ" },
-        { id: "0602", name: "落下時ブーストリカバー", cost: 1, type: "support", desc: "落下復帰時にブースト獲得" },
-        { id: "0603", name: "壁リングガード", cost: 1, type: "support", desc: "壁衝突時のリング減少を防ぐ" },
-        { id: "0604", name: "無敵スタート", cost: 2, type: "support", desc: "スタート直後約40秒無敵" },
-        { id: "0605", name: "アイテムロスト無効化", cost: 2, type: "support", desc: "被弾時のアイテムロストを防ぐ" },
-        { id: "0606", name: "クイックリカバー", cost: 3, type: "support", desc: "復帰速度アップ" },
-        { id: "0607", name: "リングガード", cost: 2, type: "support", desc: "被弾時のリング減少を半減" },
+        { id: "0601", name: "リングリカバリー", cost: 1, type: "support", desc: "被弾後10リング獲得" },
+        { id: "0602", name: "無敵リカバリー", cost: 2, type: "support", desc: "被弾後約七秒無敵" },
+        { id: "0603", name: "アイテムリカバリー", cost: 2, type: "support", desc: "被弾後アイテム獲得" },
+        { id: "0604", name: "グリップ力強化", cost: 1, type: "support", desc: "滑る路面でグリップ力アップ" },
+        { id: "0605", name: "落下時ブーストリカバー", cost: 1, type: "support", desc: "落下復帰時にブースト獲得" },
+        { id: "0606", name: "壁リングガード", cost: 1, type: "support", desc: "壁衝突時のリング減少を防ぐ" },
+        { id: "0607", name: "無敵スタート", cost: 2, type: "support", desc: "スタート直後約40秒無敵" },
+        { id: "0608", name: "無敵ファイナル", cost: 2, type: "support", desc: "三ラップ目約20秒無敵" },
+        { id: "0609", name: "アイテムロスト無効化", cost: 2, type: "support", desc: "被弾時のアイテムロストを防ぐ" },
+        { id: "0610", name: "クイックリカバー", cost: 3, type: "support", desc: "復帰速度アップ" },
+        { id: "0611", name: "リングガード", cost: 2, type: "support", desc: "被弾時のリング減少を半減" },
 
-        { id: "0701", name: "アイテムストックトレード", cost: 3, type: "item-control", desc: "アイテム順序入れ替え可能" },
-        { id: "0702", name: "アイテムストックプラス", cost: 2, type: "item-control", desc: "アイテム所持数+1" },
-        { id: "0703", name: "設置アイテム確率アップ", cost: 1, type: "item-control", desc: "設置アイテム出現率アップ" },
-        { id: "0704", name: "攻撃アイテム確率アップ", cost: 1, type: "item-control", desc: "攻撃アイテム出現率アップ" },
-        { id: "0705", name: "防御アイテム確率アップ", cost: 2, type: "item-control", desc: "防御アイテム出現率アップ" },
-        { id: "0706", name: "加速アイテム確率アップ", cost: 3, type: "item-control", desc: "加速アイテム出現率アップ" },
-        { id: "0707", name: "ウィスプ確率アップ", cost: 1, type: "item-control", desc: "ブースト・レーザー・ドリル・ボム・ヴォイドの5種が出現率アップ" },
+        { id: "0701", name: "時々獲得アイテム2倍", cost: 2, type: "item-control", desc: "50%でアイテムが二倍に" },
+        { id: "0702", name: "獲得アイテム2倍", cost: 3, type: "item-control", desc: "アイテムが二倍に、全ステータス-10",calc: (s) => { s.speed -= 10; s.accel -= 10; s.handling -= 10; s.power -= 10; s.dash -= 10; } },
+        { id: "0703", name: "アイテムストックプラス", cost: 2, type: "item-control", desc: "アイテム所持数+1" },
+        { id: "0704", name: "設置アイテム確率アップ", cost: 1, type: "item-control", desc: "設置アイテム出現率アップ" },
+        { id: "0705", name: "攻撃アイテム確率アップ", cost: 1, type: "item-control", desc: "攻撃アイテム出現率アップ" },
+        { id: "0706", name: "防御アイテム確率アップ", cost: 2, type: "item-control", desc: "防御アイテム出現率アップ" },
+        { id: "0707", name: "加速アイテム確率アップ", cost: 3, type: "item-control", desc: "加速アイテム出現率アップ" },
+        { id: "0708", name: "ウィスプ確率アップ", cost: 1, type: "item-control", desc: "ブースト・レーザー・ドリル・ボム・ヴォイドの5種が出現率アップ" },
 
         { id: "0801", name: "最初からブースト", cost: 1, type: "item-boost", desc: "開始時ブースト所持" },
         { id: "0802", name: "ダブルブースト追加", cost: 2, type: "item-boost", desc: "開始時ダブルブースト所持" },
@@ -295,4 +300,5 @@
             { rank: 49, name: "Dann", char: "ジェット", charType: "スピード", machineType: "ダッシュ", machineBody: "タイプ-J イオタ", parts: ["タイプ-J イオタ", "タイプ-J イオタ"], gadgets: ["テクニカルドリフト", "セカンドファストチャージ", "アルティメットチャージ", "サードファストチャージ"], stats: { speed: 45, accel: 39, handling: 53, power: 34, dash: 68 } },
             { rank: 50, name: "zDyxasty", char: "ソニック", charType: "スピード", machineType: "スピード", machineBody: "スピードスターライトニング", parts: ["スピードスターライトニング", "スピードスターライトニング", "スピードスターライトニング"], gadgets: ["アイテムストックトレード", "アイテムストックプラス", "ウィスプ確率アップ"], stats: { speed: 80, accel: 20, handling: 52, power: 60, dash: 28 } }
         ]
+
     };
