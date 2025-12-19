@@ -73,7 +73,6 @@ button:hover { opacity: 0.8; }
 .player-row { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
 .player-row:hover { background-color: #f0f8ff; }
 .rank-num { width: 40px; font-weight: bold; color: #444; font-size: 1.1rem; }
-.rank-top { color: #ff9800; }
 .p-name { flex: 1; font-weight: bold; color: var(--primary); }
 .p-char { color: #666; font-size: 0.9rem; }
 
@@ -103,17 +102,9 @@ button:hover { opacity: 0.8; }
     padding: 10px;
     border-radius: 6px;
 }
-.m-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 15px; background: #eee; padding: 6px; border-radius: 6px; }
-.m-grid-item { background: #fff; padding: 6px 2px; border-radius: 4px; border: 1px solid #ddd; text-align: center; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50px; word-break: break-all; }
-.m-grid-cost { font-size: 0.65rem; color: #999; margin-top: 2px; font-weight: bold; }
 .m-label { font-size:0.8rem; color:#666; margin-bottom:4px; display:block; }
-/* --- シナジーリストのデザイン（進化版） --- */
-.synergy-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
 
+/* --- シナジーリストのデザイン --- */
 .synergy-card {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -123,27 +114,13 @@ button:hover { opacity: 0.8; }
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 10px; /* カード間の余白 */
 }
 
 .synergy-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     background-color: #e0f2f1; /* 薄い緑 */
-}
-
-.synergy-title {
-    font-weight: bold;
-    color: #00695c;
-    margin-bottom: 4px;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.synergy-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: #666;
 }
 
 /* 分析モーダル内のグラフ用 */
@@ -157,8 +134,6 @@ button:hover { opacity: 0.8; }
 .stat-bar-bg { flex: 2; height: 12px; background: #eee; border-radius: 6px; overflow: hidden; margin: 0 10px; }
 .stat-bar-fill { height: 100%; background: #ff9800; }
 .stat-val { width: 40px; text-align: right; color: #888; }
-
-/* --- 追加修正: 閉じるボタンとランキング装飾 --- */
 
 /* ポップアップ内の閉じるボタン (濃い色に変更) */
 .btn-modal-close {
@@ -177,18 +152,146 @@ button:hover { opacity: 0.8; }
 }
 
 /* ランキング順位 (金・銀・銅) */
-.rank-num.rank-1 { 
-    color: #d4af37; /* ゴールド */
-    font-size: 1.4rem; 
-    text-shadow: 1px 1px 0px #b8860b;
+.rank-num.rank-1 { color: #d4af37; font-size: 1.4rem; text-shadow: 1px 1px 0px #b8860b; }
+.rank-num.rank-2 { color: #a9a9a9; font-size: 1.3rem; text-shadow: 1px 1px 0px #696969; }
+.rank-num.rank-3 { color: #c47022; font-size: 1.2rem; text-shadow: 1px 1px 0px #8b4513; }
+/* --- アーカイブタブ用スタイル (末尾に追加) --- */
+.tab-btn {
+    background-color: #eee;
+    color: #666;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
 }
-.rank-num.rank-2 { 
-    color: #a9a9a9; /* シルバー */
-    font-size: 1.3rem; 
-    text-shadow: 1px 1px 0px #696969;
+.tab-btn:hover {
+    background-color: #e0e0e0;
 }
-.rank-num.rank-3 { 
-    color: #c47022; /* ブロンズ */
-    font-size: 1.2rem; 
-    text-shadow: 1px 1px 0px #8b4513;
+.tab-btn.active-tab {
+    background-color: #ff9800; /* アクティブ時の色 */
+    color: white;
+    border-color: #f57c00;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+/* ワールドマッチ選択時は青系にするなどの調整も可能 */
+#tab-world.active-tab { background-color: #009688; border-color: #00796b; }
+#tab-legend.active-tab { background-color: #ff9800; border-color: #ef6c00; }
+/* --- 全画面共通 データ選択バー（リッチデザイン版） --- */
+.global-data-bar {
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 0;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* 影を柔らかく広げる */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.global-bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 要素を中央寄せ */
+    gap: 20px; /* 各パーツの間隔を広げる */
+    flex-wrap: wrap;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.bar-label {
+    font-weight: bold;
+    color: #555;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* カテゴリ切り替えボタングループ（カプセル型背景） */
+.g-category-group {
+    display: flex;
+    background-color: #f0f2f5; /* 背景を薄いグレーに */
+    border-radius: 30px;       /* 丸みを帯びさせる */
+    padding: 4px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); /* 内側に影をつけて凹ませる */
+}
+
+/* ボタン共通スタイル */
+.g-cat-btn {
+    border: none;
+    background: transparent;
+    padding: 8px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #888; /* 非選択時は薄い色 */
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.g-cat-btn:hover {
+    color: #555;
+}
+
+/* --- アクティブ（選択中）の状態 --- */
+.g-cat-btn.active {
+    background-color: #fff; /* 選択中は白背景 */
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* 浮き上がるような影 */
+    transform: scale(1.02); /* ほんの少し大きく */
+}
+
+/* ワールド選択時のアクセントカラー */
+#g-btn-world.active {
+    color: #009688; /* 濃い青緑 */
+    border: 2px solid #009688; /* 枠線を追加して強調 */
+    padding: 6px 18px; /* ボーダー分だけパディング調整 */
+}
+
+/* レジェンド選択時のアクセントカラー */
+#g-btn-legend.active {
+    color: #ff9800; /* オレンジ */
+    border: 2px solid #ff9800;
+    padding: 6px 18px;
+}
+
+/* プルダウンエリアのデザイン */
+.g-select-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.g-select-group select {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fafafa;
+    cursor: pointer;
+    outline: none;
+    min-width: 220px; /* 幅を揃える */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.g-select-group select:hover {
+    border-color: #999;
+}
+
+.g-select-group select:focus {
+    border-color: #0055ff;
+    box-shadow: 0 0 0 3px rgba(0, 85, 255, 0.1);
+}
+
+/* 補足テキスト */
+.global-note {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 8px;
+    width: 100%; /* 下段に回す */
 }
