@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRCW-Garage | ソニックレーシングCW 構成ツール</title><link rel="stylesheet" href="css/style.css">
+    <title>SRCW-Garage | ソニックレーシングCW 構成ツール</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -96,6 +97,7 @@
                             <div style="flex-grow: 1; min-width: 200px; display:flex; gap:5px; flex-direction:column;">
                                 <div style="text-align:right;">
                                     <button id="btnSort" onclick="toggleSort()" style="background-color: #607d8b; font-size: 0.75rem; padding: 4px 8px; border-radius: 15px;">📊 使用率順に並べ替え</button>
+                                    <button id="btnCost1Limit" onclick="toggleCost1Limit()" style="background-color: #607d8b; font-size: 0.75rem; padding: 4px 8px; border-radius: 15px; margin-left: 5px;">🔓 コスト1限定 OFF</button>
                                 </div>
                                 <select id="gadgetSelect" onchange="showGadgetDescription()" style="width: 100%;">
                                     <option value="" disabled selected>ガジェットを選択してください</option>
@@ -219,4 +221,3 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
 </html>
-
