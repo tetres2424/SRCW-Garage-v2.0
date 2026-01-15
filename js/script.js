@@ -7,6 +7,7 @@ let currentSetup = { upper: [], lower: [], charId: "", machineType: "", part1: "
 let customGadgets = [];
 let savedMemos = [];
 let isSortedByUsage = false;
+let isCost1Limit = false; // ★追加: コスト1限定モードフラグ
 
 // グローバル管理変数
 let currentRankingId = "";
@@ -413,6 +414,23 @@ function toggleSort() {
     updateSelectOptions();
 }
 
+// ★追加：コスト1限定モードの切り替え
+function toggleCost1Limit() {
+    isCost1Limit = !isCost1Limit;
+    const btn = document.getElementById('btnCost1Limit');
+    if (btn) {
+        if (isCost1Limit) {
+            btn.textContent = "🔒 コスト1限定 ON";
+            btn.style.backgroundColor = "#ff9800"; // ONのときはオレンジ色など目立つ色に
+        } else {
+            btn.textContent = "🔓 コスト1限定 OFF";
+            btn.style.backgroundColor = "#607d8b"; // 元の色
+        }
+    }
+    updateSelectOptions(); // リストを更新
+}
+
+// ★修正：リスト生成時にフィルタリングを行う
 function updateSelectOptions() {
     const select = document.getElementById('gadgetSelect');
     select.innerHTML = '<option value="" disabled selected>ガジェットを選択してください</option>';
@@ -428,6 +446,9 @@ function updateSelectOptions() {
     } 
     
     const createOpt = (g) => {
+        // ★ここに追加：コスト1限定モードなら、コスト1以外は表示しない
+        if (isCost1Limit && g.cost > 1) return;
+
         const opt = document.createElement('option');
         opt.value = g.id;
         
@@ -446,12 +467,21 @@ function updateSelectOptions() {
     };
     
     listToRender.forEach(createOpt);
+    
+    // カスタムガジェットも同様にフィルタリング
     if(customGadgets.length > 0) {
-        const sep = document.createElement('option');
-        sep.disabled = true; sep.textContent = "--- オリジナル ---";
-        select.appendChild(sep);
-        customGadgets.forEach(createOpt);
+        // 表示するカスタムガジェットがあるか確認
+        const visibleCustoms = customGadgets.filter(g => !isCost1Limit || g.cost === 1);
+        
+        if (visibleCustoms.length > 0) {
+            const sep = document.createElement('option');
+            sep.disabled = true;
+            sep.textContent = "--- オリジナル ---";
+            select.appendChild(sep);
+            customGadgets.forEach(createOpt);
+        }
     }
+    
     renderCustomList();
 }
 
@@ -536,6 +566,12 @@ function tryAddGadget() {
     let gadget = defaultGadgets.find(g => g.id === gId) || customGadgets.find(g => g.id === gId);
     if (!gadget) return;
     
+    // ★追加：コスト1限定モードの場合のチェック
+    if (isCost1Limit && gadget.cost > 1) {
+        showMessage("⚠️ コスト1限定モード中です", true);
+        return;
+    }
+
     const allCurrent = [...currentSetup.upper, ...currentSetup.lower];
     if (allCurrent.some(item => item.id === gadget.id)) {
         showMessage("⚠️ 同じガジェットは2つセットできません", true);
@@ -665,7 +701,12 @@ function setRandomFull() {
 }
 
 function generateRandomGadgets() {
-    const pool = [...defaultGadgets, ...customGadgets];
+    // ★修正: コスト1モードなら、ランダム生成の対象もコスト1のみに限定
+    let pool = [...defaultGadgets, ...customGadgets];
+    if (isCost1Limit) {
+        pool = pool.filter(g => g.cost === 1);
+    }
+
     const usedIds = new Set();
     const fill = () => {
         let r=[], c=0, s=0;
@@ -727,10 +768,15 @@ function setAiOriginalSetup() {
     });
     const tactic = weightedTactics[Math.floor(Math.random() * weightedTactics.length)];
 
-    const allGadgets = [...defaultGadgets, ...customGadgets];
+    let allGadgets = [...defaultGadgets, ...customGadgets];
+    // ★追加：コスト1限定モード対応
+    if (isCost1Limit) {
+        allGadgets = allGadgets.filter(g => g.cost === 1);
+    }
+
     const usedIds = new Set(); 
     const highPriority = allGadgets.filter(tactic.priority);
-    const fillers = allGadgets.filter(g => g.cost === 1 && !tactic.priority(g));
+    const fillers = allGadgets.filter(g => g.cost === 1 && !tactic.priority(g)); // fillersは元々コスト1のみ
 
     const createRow = () => {
         let row = []; let cost = 0; let safety = 0;
