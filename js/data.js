@@ -238,7 +238,7 @@ const rankingArchives = [
         type: "legend",
         season: 1,
         date: "2025-12-23", 
-        title: "最終結果 (Top 50)", 
+        title: "最終結果 (Top 100)", 
         note: "シーズン1 最終確定順位",
         playerList: [
             { rank: 1, rate: 2279, name: "1UP Exponso", char: "エッグマン", charType: "パワー", machineType: "ダッシュ", machineBody: "タイプ-J イオタ", parts: ["タイプ-J イオタ", "タイプ-J イオタ"], gadgets: ["テクニカルドリフト", "セカンドファストチャージ", "アルティメットチャージ", "サードファストチャージ"], stats: { speed: 40, accel: 40, handling: 47, power: 37, dash: 76 } },
@@ -467,3 +467,4 @@ const rankingArchives = [
         
     }
 ];
+
